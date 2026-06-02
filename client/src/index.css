@@ -1,0 +1,39 @@
+@import "tailwindcss";
+
+@theme {
+  --color-industrial-900: #111827;
+  --color-industrial-800: #1F2937;
+  --color-industrial-700: #374151;
+  --color-industrial-orange: #EA580C;
+  --color-industrial-blue: #2563EB;
+}
+
+@layer base {
+  html, body {
+    scroll-behavior: smooth;
+    @apply bg-industrial-900 text-gray-100 font-sans antialiased selection:bg-industrial-orange selection:text-white min-h-screen;
+  }
+  
+  /* Add padding to all container elements by default so they don't touch the edges */
+  .container {
+    @apply px-4 sm:px-6 lg:px-8 mx-auto;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-industrial-orange hover:bg-orange-700 text-white font-bold py-2 px-4 rounded transition-all duration-300 shadow-lg shadow-industrial-orange/20 hover:shadow-industrial-orange/40 hover:-translate-y-0.5;
+  }
+  .btn-secondary {
+    @apply bg-industrial-800 hover:bg-industrial-700 text-white font-bold py-2 px-4 rounded border border-industrial-700 transition-all duration-300 hover:-translate-y-0.5 shadow-lg shadow-black/20;
+  }
+  .input-field {
+    @apply bg-industrial-800 border border-industrial-700 rounded py-2 px-4 text-white focus:outline-none focus:border-industrial-orange transition-colors duration-300 w-full;
+  }
+  .card {
+    @apply bg-industrial-800 rounded-lg shadow-lg overflow-hidden border border-industrial-700 hover:border-industrial-700/80 transition-colors duration-300;
+  }
+  .glass-panel {
+    @apply bg-industrial-900/85 backdrop-blur-md border-b border-industrial-700/50 shadow-xl;
+  }
+}

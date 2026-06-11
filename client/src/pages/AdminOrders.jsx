@@ -65,10 +65,10 @@ export default function AdminOrders() {
   if (loading) return <div className="p-8 text-center text-xl text-gray-400">Loading Orders...</div>;
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-4 sm:py-8">
       <div className="w-full">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-3xl font-bold">Order Management</h2>
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+          <h2 className="text-2xl sm:text-3xl font-bold">Order Management</h2>
           <button onClick={downloadCSV} className="flex items-center gap-2 btn-secondary">
             <Download size={18} /> Download CSV Report
           </button>

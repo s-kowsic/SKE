@@ -52,7 +52,7 @@ export default function Cart() {
   }
 
   return (
-    <div className="p-8 max-w-6xl mx-auto">
+    <div className="p-4 sm:p-6 md:p-8 max-w-6xl mx-auto">
       <div className="flex items-center gap-3 mb-8">
         <ShoppingBag size={32} className="text-industrial-orange" />
         <h1 className="text-3xl font-bold text-white">{t('cart.title')}</h1>
@@ -72,7 +72,7 @@ export default function Cart() {
           {/* Cart Items List */}
           <div className="flex-1 space-y-4">
             {cart.map((item) => (
-              <div key={item._id} className="bg-industrial-800 border border-industrial-700 rounded-xl p-4 flex items-center gap-6 shadow-sm hover:border-industrial-600 transition-colors">
+              <div key={item._id} className="bg-industrial-800 border border-industrial-700 rounded-xl p-4 flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 shadow-sm hover:border-industrial-600 transition-colors">
                 <div className="w-24 h-24 bg-industrial-900 rounded-lg overflow-hidden flex-shrink-0">
                   {item.imageUrl ? (
                     <img src={item.imageUrl} alt={item.name} className="w-full h-full object-cover" />
@@ -103,7 +103,7 @@ export default function Cart() {
                   </div>
                 </div>
                 
-                <div className="text-right">
+                <div className="text-right sm:text-right w-full sm:w-auto flex sm:flex-col items-center sm:items-end justify-between">
                   <p className="text-xl font-bold text-white mb-2">₹{(item.price * item.quantity).toFixed(2)}</p>
                   <button 
                     onClick={() => removeFromCart(item._id)} 
@@ -138,7 +138,7 @@ export default function Cart() {
                 <div className="border-t border-industrial-700 pt-4 mt-4">
                   <div className="flex justify-between items-center">
                     <span className="text-lg font-bold text-white">{t('cart.total')}</span>
-                    <span className="text-3xl font-bold text-industrial-orange">₹{cartTotal.toFixed(2)}</span>
+                    <span className="text-2xl sm:text-3xl font-bold text-industrial-orange">₹{cartTotal.toFixed(2)}</span>
                   </div>
                 </div>
               </div>

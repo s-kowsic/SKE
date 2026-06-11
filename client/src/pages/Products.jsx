@@ -135,7 +135,7 @@ export default function Products() {
       
       {/* HEADER SECTION */}
       <div className="bg-industrial-800 border-b border-industrial-700 pb-8 mb-8">
-        <div className="container mx-auto px-12 lg:px-8">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           {/* Breadcrumbs */}
           <div className="mb-6 flex items-center text-sm text-gray-400">
           </div>

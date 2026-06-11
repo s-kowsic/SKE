@@ -42,7 +42,7 @@ export default function About() {
             <div className="inline-block px-4 py-1 rounded-full bg-industrial-orange/20 border border-industrial-orange text-industrial-orange font-bold text-sm mb-6">
               {t('about.title')}
             </div>
-            <h1 className="text-5xl md:text-6xl font-bold text-white mb-6 leading-tight">
+            <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold text-white mb-6 leading-tight">
               {t('about.subtitle') || 'Engineering the Future of Industry'}
             </h1>
             <p className="text-xl text-gray-400 mb-10 leading-relaxed">
@@ -83,7 +83,7 @@ export default function About() {
               </div>
             </motion.div>
 
-            <motion.div initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} className="relative h-[600px]">
+            <motion.div initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} className="relative h-[300px] sm:h-[400px] lg:h-[600px]">
               <img src="https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?auto=format&fit=crop&w=800&q=80" alt="Factory Interior" className="w-full h-full object-cover rounded-2xl shadow-2xl border border-industrial-700" />
               <div className="absolute inset-0 bg-industrial-orange/10 rounded-2xl mix-blend-overlay"></div>
             </motion.div>
@@ -145,7 +145,7 @@ export default function About() {
             <p className="text-gray-400 max-w-2xl mx-auto">From blueprint to final delivery, our streamlined workflow ensures zero defects.</p>
           </div>
           
-          <div className="flex flex-col md:flex-row justify-center items-start gap-8 md:gap-4 relative">
+          <div className="flex flex-col md:flex-row justify-center items-center md:items-start gap-8 md:gap-4 relative">
             {/* Connecting Line (Desktop) */}
             <div className="hidden md:block absolute top-12 left-[10%] right-[10%] h-1 bg-industrial-800 -z-10"></div>
             

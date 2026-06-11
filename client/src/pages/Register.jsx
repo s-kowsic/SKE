@@ -26,7 +26,7 @@ export default function Register() {
   };
 
   return (
-    <div className="min-h-[80vh] flex items-center justify-center">
+    <div className="min-h-[80vh] flex items-center justify-center px-4">
       <form onSubmit={handleSubmit} className="bg-industrial-800 p-8 rounded-lg shadow-xl w-full max-w-md border border-industrial-700">
         <h2 className="text-3xl font-bold mb-6 text-center text-white">{t('auth.register')}</h2>
         <div className="mb-4">

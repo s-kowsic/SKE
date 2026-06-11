@@ -34,7 +34,7 @@ export default function CartSidebar({ isOpen, onClose }) {
   };
 
   return (
-    <div className={`fixed inset-y-0 right-0 w-80 bg-industrial-900 border-l border-industrial-700 shadow-2xl transform transition-transform duration-300 z-[60] ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+    <div className={`fixed inset-y-0 right-0 w-full sm:w-80 bg-industrial-900 border-l border-industrial-700 shadow-2xl transform transition-transform duration-300 z-[60] ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}>
       <div className="flex justify-between items-center p-4 border-b border-industrial-700">
         <h2 className="text-xl font-bold text-white">Your Cart</h2>
         <button onClick={onClose} className="text-gray-400 hover:text-white">

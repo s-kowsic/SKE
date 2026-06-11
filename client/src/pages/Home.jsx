@@ -25,7 +25,7 @@ function AnimatedCounter({ value, title }) {
           </motion.span>
         ) : "0"}
       </h3>
-      <p className="text-gray-400 font-medium">{title}</p>
+      <p className="text-gray-400 text-base font-medium">{title}</p>
     </div>
   );
 }
@@ -114,7 +114,7 @@ export default function Home() {
     <div className="flex flex-col min-h-screen overflow-hidden">
 
       {/* 1. HERO SECTION */}
-      <section className="relative min-h-[90vh] flex items-center pt-24 pb-16 lg:pt-10">
+      <section className="relative min-h-[80vh] md:min-h-[90vh] flex items-center pt-20 pb-12 md:pt-24 md:pb-16 lg:pt-10">
         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80')] bg-cover bg-center bg-fixed"></div>
         <div className="absolute inset-0 bg-industrial-900/75"></div>
 
@@ -129,13 +129,13 @@ export default function Home() {
                 <span className="w-2 h-2 rounded-full bg-industrial-orange animate-pulse"></span>
                 {t('hero.title') || 'PREMIUM INDUSTRIAL MANUFACTURING'}
               </div>
-              <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 text-white tracking-tight leading-tight">
+              <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-4 md:mb-6 text-white tracking-tight leading-tight">
                 {t('hero.subtitle') ? t('hero.subtitle').split('.')[0] : 'High Quality Components'} <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-industrial-orange to-orange-400">
                   {t('hero.subtitle') ? t('hero.subtitle').split('.')[1] : 'Manufacturer'}
                 </span>
               </h1>
-              <p className="text-xl text-gray-300 mb-8 max-w-lg leading-relaxed">
+              <p className="text-base sm:text-xl text-gray-300 mb-6 md:mb-8 max-w-lg leading-relaxed">
                 {t('hero.subtitle') || 'Precision machined parts, flanges & connectors you can trust. Built for durability, delivered with speed.'}
               </p>
               <div className="flex flex-wrap gap-4">
@@ -191,7 +191,7 @@ export default function Home() {
       {/* 2. TRUST BAR */}
       <section className="bg-industrial-800 border-y border-industrial-700 relative z-20 shadow-xl">
         <div className="container mx-auto px-4 py-6">
-          <div className="flex flex-wrap justify-between items-center gap-6">
+          <div className="flex flex-wrap justify-center md:justify-between items-center gap-4 md:gap-6">
             {[
               { icon: <ShieldCheck className="text-industrial-orange" />, text: "Verified Quality" },
               { icon: <Truck className="text-industrial-orange" />, text: "Fast Global Delivery" },
@@ -375,13 +375,13 @@ export default function Home() {
 
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}
-              className="relative h-[600px] rounded-2xl overflow-hidden shadow-2xl border border-industrial-700"
+              className="relative h-[350px] sm:h-[450px] lg:h-[600px] rounded-2xl overflow-hidden shadow-2xl border border-industrial-700"
             >
               <img src="https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Factory" className="w-full h-full object-cover" />
               <div className="absolute inset-0 bg-industrial-900/40 mix-blend-multiply"></div>
 
               {/* Floating badge */}
-              <div className="absolute bottom-8 -left-8 md:left-8 glass-panel p-6 rounded-xl flex items-center gap-4 animate-bounce-slow">
+              <div className="absolute bottom-4 left-4 md:bottom-8 md:left-8 glass-panel p-4 md:p-6 rounded-xl flex items-center gap-3 md:gap-4 animate-bounce-slow">
                 <div className="w-16 h-16 rounded-full bg-industrial-orange flex items-center justify-center">
                   <Award size={32} className="text-white" />
                 </div>
@@ -456,7 +456,7 @@ export default function Home() {
       {/* 9. BLOG / INSIGHTS PREVIEW */}
       <section className="py-20 bg-industrial-900">
         <div className="container mx-auto px-4">
-          <div className="flex justify-between items-end mb-12">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 mb-12">
             <div>
               <h2 className="text-4xl font-bold mb-4">Industry Insights</h2>
               <div className="w-24 h-1 bg-industrial-orange rounded-full mb-4"></div>

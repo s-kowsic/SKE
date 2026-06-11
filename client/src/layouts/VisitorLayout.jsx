@@ -12,6 +12,12 @@ export default function VisitorLayout() {
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar toggleCart={toggleCart} />
+      {isCartOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-[55]"
+          onClick={() => setIsCartOpen(false)}
+        />
+      )}
       <CartSidebar isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
       
       <main className="flex-grow">

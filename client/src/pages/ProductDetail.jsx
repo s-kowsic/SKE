@@ -126,7 +126,7 @@ export default function ProductDetail() {
             {/* Right: Product Details */}
             <div className="p-8 lg:p-12 flex flex-col justify-center">
               <div className="uppercase tracking-wider text-industrial-orange text-sm font-bold mb-3">{product.type}</div>
-              <h1 className="text-3xl lg:text-5xl font-bold text-white mb-4 leading-tight">{product.name}</h1>
+              <h1 className="text-2xl sm:text-3xl lg:text-5xl font-bold text-white mb-4 leading-tight">{product.name}</h1>
               
               <div className="flex items-center gap-4 mb-6">
                 <div className="flex text-industrial-orange">
@@ -186,7 +186,7 @@ export default function ProductDetail() {
               </div>
 
               {/* Trust badges */}
-              <div className="mt-8 flex items-center gap-6 text-sm text-gray-400">
+              <div className="mt-8 flex flex-wrap items-center gap-4 sm:gap-6 text-sm text-gray-400">
                 <div className="flex items-center gap-2"><ShieldCheck size={18} className="text-industrial-orange" /> 1 Year Warranty</div>
                 <div className="flex items-center gap-2"><Truck size={18} className="text-industrial-orange" /> Free Global Shipping</div>
               </div>
@@ -197,7 +197,7 @@ export default function ProductDetail() {
 
         {/* AI Recommendations Section */}
         <div className="mt-20">
-          <div className="flex items-center justify-between mb-8">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
             <div>
               <h2 className="text-3xl font-bold text-white mb-2">{t('product.recommendations')}</h2>
               <p className="text-gray-400">AI-curated recommendations based on this item.</p>

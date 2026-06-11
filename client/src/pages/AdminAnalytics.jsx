@@ -54,7 +54,7 @@ export default function AdminAnalytics() {
           </ResponsiveContainer>
         </div>
         
-        <div className="grid grid-cols-2 gap-4 mt-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
           <div className="bg-industrial-800 p-6 rounded-lg border border-industrial-700 text-center">
             <p className="text-gray-400 mb-2">Total Sales Revenue</p>
             <p className="text-4xl font-bold text-industrial-orange">₹{analytics?.totalSales.toFixed(2) || '0.00'}</p>

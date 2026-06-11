@@ -91,7 +91,7 @@ export default function Contact() {
         <div className="container mx-auto px-6 relative z-10 text-center">
           <motion.h1 
             initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-            className="text-5xl md:text-6xl font-bold text-white mb-6"
+            className="text-3xl sm:text-5xl md:text-6xl font-bold text-white mb-6"
           >
             {t('contact.title') || 'Contact Us'}
           </motion.h1>

@@ -8,6 +8,7 @@ import ProductCard from '../components/ProductCard';
 import RestockModal from '../components/RestockModal';
 import { motion } from 'framer-motion';
 import { useLanguage } from '../context/LanguageContext';
+import { getImageUrl } from '../services/imageUrl';
 
 export default function ProductDetail() {
   const { id } = useParams();
@@ -104,7 +105,7 @@ export default function ProductDetail() {
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.5 }}
-                  src={product.imageUrl} 
+                  src={getImageUrl(product.imageUrl)} 
                   alt={product.name} 
                   className="w-full max-w-md h-auto object-cover rounded-xl shadow-2xl group-hover:scale-110 transition-transform duration-500 origin-center cursor-zoom-in"
                 />

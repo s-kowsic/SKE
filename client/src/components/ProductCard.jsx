@@ -5,6 +5,7 @@ import { ShoppingCart, Eye, Heart, Bell } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import RestockModal from './RestockModal';
+import { getImageUrl } from '../services/imageUrl';
 
 export default function ProductCard({ product }) {
   const { addToCart } = useCart();
@@ -39,7 +40,7 @@ export default function ProductCard({ product }) {
         <div className="h-56 overflow-hidden bg-industrial-900 relative">
           {product.imageUrl ? (
             <img 
-              src={product.imageUrl} 
+              src={getImageUrl(product.imageUrl)} 
               alt={product.name} 
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             />

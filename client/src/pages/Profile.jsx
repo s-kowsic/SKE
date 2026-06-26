@@ -10,7 +10,7 @@ export default function Profile() {
   const { t } = useLanguage();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -34,7 +34,7 @@ export default function Profile() {
         setLoading(false);
       }
     };
-    
+
     fetchProfile();
   }, []);
 
@@ -44,7 +44,7 @@ export default function Profile() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (formData.password && formData.password !== formData.confirmPassword) {
       return toast.error('Passwords do not match');
     }
@@ -56,18 +56,18 @@ export default function Profile() {
         email: formData.email,
         ...(formData.password && { password: formData.password })
       };
-      
+
       const { data } = await api.put('/users/profile', updateData);
-      
+
       toast.success('Profile updated successfully!');
-      
+
       // Clear passwords from form
       setFormData(prev => ({
         ...prev,
         password: '',
         confirmPassword: ''
       }));
-      
+
     } catch (error) {
       toast.error(error.response?.data?.message || 'Failed to update profile');
     } finally {
@@ -86,7 +86,7 @@ export default function Profile() {
   return (
     <div className="p-4 md:p-8 max-w-4xl mx-auto">
       <h1 className="text-3xl font-bold text-white mb-6">{t('profile.title')}</h1>
-      
+
       <div className="bg-industrial-800 rounded-2xl border border-industrial-700 p-6 md:p-10 shadow-xl relative overflow-hidden">
         {/* Decorative background element */}
         <div className="absolute top-0 right-0 w-64 h-64 bg-industrial-orange/5 blur-[80px] rounded-full pointer-events-none"></div>
@@ -102,7 +102,7 @@ export default function Profile() {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6 relative z-10">
-          
+
           <div className="grid md:grid-cols-2 gap-6">
             <div className="space-y-2">
               <label className="text-sm font-bold text-gray-400">{t('profile.fullName')}</label>
@@ -117,7 +117,7 @@ export default function Profile() {
                   onChange={handleChange}
                   required
                   className="w-full bg-industrial-900 border border-industrial-700 rounded-xl py-3 pl-12 pr-4 text-white focus:border-industrial-orange focus:outline-none transition-colors"
-                  placeholder="John Doe"
+                  placeholder="Enter Your Full Name"
                 />
               </div>
             </div>
@@ -143,7 +143,7 @@ export default function Profile() {
 
           <div className="pt-6 mt-6 border-t border-industrial-700">
             <h3 className="text-lg font-bold text-white mb-4">{t('profile.changePassword')}</h3>
-            
+
             <div className="grid md:grid-cols-2 gap-6">
               <div className="space-y-2">
                 <label className="text-sm font-bold text-gray-400">{t('profile.newPassword')}</label>

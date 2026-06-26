@@ -12,6 +12,7 @@ const userRoutes = require('./routes/userRoutes');
 const uploadRoutes = require('./routes/uploadRoutes');
 const contactRoutes = require('./routes/contactRoutes');
 const translateRoutes = require('./routes/translateRoutes');
+const paymentRoutes = require('./routes/paymentRoutes');
 const path = require('path');
 
 // Connect Database
@@ -33,6 +34,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/translate', translateRoutes);
+app.use('/api/payment', paymentRoutes);
 
 // Make uploads folder static
 app.use('/uploads', express.static(path.join(__dirname, '/uploads')));

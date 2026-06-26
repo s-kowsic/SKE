@@ -37,6 +37,12 @@ const ProtectedRoute = ({ children, roleRequired }) => {
   return children;
 };
 
+// Renders AdminOrders for admins, CustomerOrders for customers
+const RoleBasedOrders = () => {
+  const { user } = useAuth();
+  return user?.role === 'Admin' ? <AdminOrders /> : <CustomerOrders />;
+};
+
 function App() {
   return (
     <Router>
@@ -71,15 +77,12 @@ function App() {
               {/* Customer Routes */}
               <Route path="/u/:userid/home" element={<CustomerDashboard />} />
               <Route path="/u/:userid/cart" element={<Cart />} />
-              <Route path="/u/:userid/orders" element={<CustomerOrders />} />
+              <Route path="/u/:userid/orders" element={<RoleBasedOrders />} />
               <Route path="/u/:userid/wishlist" element={<Wishlist />} />
 
               {/* Admin Routes */}
               <Route path="/u/:userid/products" element={
                 <ProtectedRoute roleRequired="Admin"><AdminProducts /></ProtectedRoute>
-              } />
-              <Route path="/u/:userid/orders" element={
-                <ProtectedRoute roleRequired="Admin"><AdminOrders /></ProtectedRoute>
               } />
               <Route path="/u/:userid/users" element={
                 <ProtectedRoute roleRequired="Admin"><AdminUsers /></ProtectedRoute>

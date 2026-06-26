@@ -34,8 +34,11 @@ export const LanguageProvider = ({ children }) => {
   const toggleLanguage = useCallback(() => {
     setLanguage(prev => {
       const newLang = prev === 'en' ? 'ta' : 'en';
-      const msg = newLang === 'ta' ? 'மொழி தமிழுக்கு மாற்றப்பட்டது' : 'Language changed to English';
-      toast.success(msg, { icon: '🌐' });
+      // Toast is called outside the updater via setTimeout to avoid React 18 double-invocation
+      setTimeout(() => {
+        const msg = newLang === 'ta' ? 'மொழி தமிழுக்கு மாற்றப்பட்டது' : 'Language changed to English';
+        toast.success(msg, { icon: '🌐', id: 'lang-toggle' });
+      }, 0);
       return newLang;
     });
   }, []);

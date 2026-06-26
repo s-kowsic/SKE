@@ -6,6 +6,7 @@ import { motion, useInView } from 'framer-motion';
 import { useLanguage } from '../context/LanguageContext';
 import { Search, ShieldCheck, Truck, Clock, Award, ChevronRight, Settings, Users, Star, ArrowRight, CheckCircle2 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { getImageUrl } from '../services/imageUrl';
 
 // Reusable animated counter component
 function AnimatedCounter({ value, title }) {
@@ -127,16 +128,16 @@ export default function Home() {
             >
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-industrial-800/80 border border-industrial-700 text-industrial-orange text-sm font-bold mb-6 backdrop-blur-sm">
                 <span className="w-2 h-2 rounded-full bg-industrial-orange animate-pulse"></span>
-                {t('hero.title') || 'PREMIUM INDUSTRIAL MANUFACTURING'}
+                {t('hero.title')}
               </div>
               <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-4 md:mb-6 text-white tracking-tight leading-tight">
-                {t('hero.subtitle') ? t('hero.subtitle').split('.')[0] : 'High Quality Components'} <br />
+                {t('hero.subtitle').split('.')[0]} <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-industrial-orange to-orange-400">
-                  {t('hero.subtitle') ? t('hero.subtitle').split('.')[1] : 'Manufacturer'}
+                  {t('hero.subtitle').split('.')[1]}
                 </span>
               </h1>
               <p className="text-base sm:text-xl text-gray-300 mb-6 md:mb-8 max-w-lg leading-relaxed">
-                {t('hero.subtitle') || 'Precision machined parts, flanges & connectors you can trust. Built for durability, delivered with speed.'}
+                {t('hero.subtitle')}
               </p>
               <div className="flex flex-wrap gap-4">
                 <Link to="/products" className="btn-primary text-lg px-8 py-4 flex items-center gap-2 group">
@@ -155,31 +156,31 @@ export default function Home() {
             >
               <div className="glass-panel rounded-2xl p-8 relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-industrial-orange/20 blur-[50px]"></div>
-                <h3 className="text-2xl font-bold text-white mb-2 relative z-10">Get the Best Price</h3>
-                <p className="text-gray-400 mb-6 relative z-10">Leave your details and our experts will call you back within 15 minutes.</p>
+                <h3 className="text-2xl font-bold text-white mb-2 relative z-10">{t('home.getBestPrice')}</h3>
+                <p className="text-gray-400 mb-6 relative z-10">{t('home.getBestPriceDesc')}</p>
 
                 <form onSubmit={handleLeadSubmit} className="space-y-4 relative z-10">
                   <div>
                     <input
-                      type="text" placeholder="Your Name"
+                      type="text" placeholder={t('home.yourName')}
                       className="input-field bg-industrial-900/50 border-industrial-700/50"
                       value={leadForm.name} onChange={e => setLeadForm({ ...leadForm, name: e.target.value })}
                     />
                   </div>
                   <div>
                     <input
-                      type="tel" placeholder="Phone Number"
+                      type="tel" placeholder={t('home.phoneNumber')}
                       className="input-field bg-industrial-900/50 border-industrial-700/50"
                       value={leadForm.phone} onChange={e => setLeadForm({ ...leadForm, phone: e.target.value })}
                     />
                   </div>
-                  <button type="submit" className="w-full btn-primary py-3">Get Best Price</button>
+                  <button type="submit" className="w-full btn-primary py-3">{t('home.getBestPriceBtn')}</button>
                 </form>
 
                 <div className="mt-6 pt-6 border-t border-industrial-700/50 text-center relative z-10">
-                  <p className="text-sm text-gray-400 mb-3">Or connect instantly</p>
+                  <p className="text-sm text-gray-400 mb-3">{t('home.orConnect')}</p>
                   <a href={`https://wa.me/${import.meta.env.VITE_WHATSAPP_NUMBER || '6369174670'}`} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 w-full py-3 rounded-lg bg-[#25D366]/10 text-[#25D366] hover:bg-[#25D366]/20 border border-[#25D366]/20 transition-colors font-bold">
-                    Chat on WhatsApp
+                    {t('home.chatWhatsApp')}
                   </a>
                 </div>
               </div>
@@ -193,11 +194,11 @@ export default function Home() {
         <div className="container mx-auto px-4 py-6">
           <div className="flex flex-wrap justify-center md:justify-between items-center gap-4 md:gap-6">
             {[
-              { icon: <ShieldCheck className="text-industrial-orange" />, text: "Verified Quality" },
-              { icon: <Truck className="text-industrial-orange" />, text: "Fast Global Delivery" },
-              { icon: <Settings className="text-industrial-orange" />, text: "Custom Manufacturing" },
-              { icon: <Award className="text-industrial-orange" />, text: "Lowest Pricing Guarantee" },
-              { icon: <Clock className="text-industrial-orange" />, text: "24/7 AI Support" }
+              { icon: <ShieldCheck className="text-industrial-orange" />, text: t('home.verifiedQuality') },
+              { icon: <Truck className="text-industrial-orange" />, text: t('home.fastGlobalDelivery') },
+              { icon: <Settings className="text-industrial-orange" />, text: t('home.customManufacturing') },
+              { icon: <Award className="text-industrial-orange" />, text: t('home.lowestPricing') },
+              { icon: <Clock className="text-industrial-orange" />, text: t('home.aiSupport') }
             ].map((item, i) => (
               <div key={i} className="flex items-center gap-3 font-semibold text-gray-300">
                 {item.icon}
@@ -212,8 +213,8 @@ export default function Home() {
       <section className="py-16 bg-industrial-900 relative">
         <div className="container mx-auto px-4 max-w-4xl relative z-30" ref={searchRef}>
           <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold mb-4">Find Exactly What You Need</h2>
-            <p className="text-gray-400">Describe the part, material, or dimensions. Our AI will find the perfect match.</p>
+            <h2 className="text-3xl font-bold mb-4">{t('home.findExactly')}</h2>
+            <p className="text-gray-400">{t('home.findExactlyDesc')}</p>
           </div>
 
           <div className="relative">
@@ -223,7 +224,7 @@ export default function Home() {
             <input
               type="text"
               className="block w-full pl-12 pr-4 py-5 bg-industrial-800 border-2 border-industrial-700 rounded-xl text-lg text-white placeholder-gray-500 focus:outline-none focus:border-industrial-orange shadow-lg transition-colors"
-              placeholder={t('hero.search') || "e.g., '12 inch stainless steel flange for high pressure'..."}
+              placeholder={t('hero.search')}
               value={searchQuery}
               onChange={handleSearch}
               onFocus={() => { if (searchQuery.length > 2) setShowDropdown(true); }}
@@ -242,11 +243,11 @@ export default function Home() {
               >
                 {searchResults.length > 0 ? (
                   <div className="p-2">
-                    <p className="px-3 py-2 text-xs font-bold text-industrial-orange uppercase tracking-wider">AI Matches</p>
+                    <p className="px-3 py-2 text-xs font-bold text-industrial-orange uppercase tracking-wider">{t('home.aiMatches')}</p>
                     {searchResults.map((product) => (
                       <div key={product._id} className="flex items-center gap-4 p-3 hover:bg-industrial-700 rounded-lg cursor-pointer transition-colors" onClick={() => navigate(`/products`)}>
                         <div className="w-12 h-12 bg-industrial-900 rounded overflow-hidden flex-shrink-0">
-                          {product.imageUrl ? <img src={product.imageUrl} alt={product.name} className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center text-xs text-gray-600">No img</div>}
+                          {product.imageUrl ? <img src={getImageUrl(product.imageUrl)} alt={product.name} className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center text-xs text-gray-600">No img</div>}
                         </div>
                         <div className="flex-1">
                           <h4 className="font-bold text-white text-sm">{product.name}</h4>
@@ -258,7 +259,7 @@ export default function Home() {
                   </div>
                 ) : !isSearching && searchQuery.length > 2 ? (
                   <div className="p-8 text-center text-gray-400">
-                    <p>No direct matches found. Try modifying your search or <Link to="/contact" className="text-industrial-orange hover:underline">contact us</Link> for custom manufacturing.</p>
+                    <p>{t('home.noMatches')} <Link to="/contact" className="text-industrial-orange hover:underline">{t('home.contactForCustom')}</Link> {t('home.forCustomMfg')}</p>
                   </div>
                 ) : null}
               </motion.div>
@@ -271,17 +272,17 @@ export default function Home() {
       <section className="py-20 bg-industrial-800">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-4">Top Categories</h2>
+            <h2 className="text-4xl font-bold mb-4">{t('home.topCategories')}</h2>
             <div className="w-24 h-1 bg-industrial-orange mx-auto rounded-full mb-4"></div>
-            <p className="text-gray-400 max-w-2xl mx-auto">Explore our wide range of industrial components, manufactured to exact specifications.</p>
+            <p className="text-gray-400 max-w-2xl mx-auto">{t('home.topCategoriesDesc')}</p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
-              { title: "Industrial Flanges", img: "https://images.unsplash.com/photo-1581092335397-9583eb92d232?auto=format&fit=crop&w=800&q=80" },
-              { title: "Pipe Connectors", img: "https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?auto=format&fit=crop&w=800&q=80" },
-              { title: "Machined Blocks", img: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&q=80" },
-              { title: "Custom Parts", img: "https://images.unsplash.com/photo-1565814329452-e1efa11c5b89?auto=format&fit=crop&w=800&q=80" }
+              { title: t('home.industrialFlanges'), img: "https://images.unsplash.com/photo-1581092335397-9583eb92d232?auto=format&fit=crop&w=800&q=80" },
+              { title: t('home.pipeConnectors'), img: "https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?auto=format&fit=crop&w=800&q=80" },
+              { title: t('home.machinedBlocks'), img: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&q=80" },
+              { title: t('home.customParts'), img: "https://images.unsplash.com/photo-1565814329452-e1efa11c5b89?auto=format&fit=crop&w=800&q=80" }
             ].map((cat, i) => (
               <motion.div
                 key={i}
@@ -335,7 +336,7 @@ export default function Home() {
             ))}
             {featured.length === 0 && (
               <div className="col-span-full p-12 text-center text-gray-500 bg-industrial-800 rounded-xl border border-industrial-700">
-                Loading featured products...
+                {t('home.loadingProducts')}
               </div>
             )}
           </div>
@@ -349,16 +350,16 @@ export default function Home() {
             <motion.div
               initial={{ opacity: 0, x: -50 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
             >
-              <h2 className="text-4xl font-bold mb-6">Why Industry Leaders <span className="text-industrial-orange">Choose Us</span></h2>
+              <h2 className="text-4xl font-bold mb-6">{t('home.whyIndustry')} <span className="text-industrial-orange">{t('home.chooseUs')}</span></h2>
               <p className="text-gray-400 text-lg mb-8 leading-relaxed">
-                Sri Krishna Engineering brings over a decade of expertise in precision manufacturing. We don't just supply parts; we provide engineered solutions that keep your assembly lines moving efficiently and safely.
+                {t('home.whyIndustryDesc')}
               </p>
 
               <div className="space-y-6">
                 {[
-                  { icon: <Settings size={28} />, title: "Precision Engineering", desc: "Tolerance levels strictly monitored." },
-                  { icon: <ShieldCheck size={28} />, title: "Durable Materials", desc: "High-grade steel and alloys used." },
-                  { icon: <Users size={28} />, title: "Experienced Team", desc: "Expert engineers and machinists." }
+                  { icon: <Settings size={28} />, title: t('home.precisionEng'), desc: t('home.precisionEngDesc') },
+                  { icon: <ShieldCheck size={28} />, title: t('home.durableMaterials'), desc: t('home.durableMaterialsDesc') },
+                  { icon: <Users size={28} />, title: t('home.experiencedTeam'), desc: t('home.experiencedTeamDesc') }
                 ].map((item, i) => (
                   <div key={i} className="flex items-start gap-4 p-4 rounded-xl hover:bg-industrial-700/50 border border-transparent hover:border-industrial-700 transition-colors">
                     <div className="w-14 h-14 rounded-lg bg-industrial-900 border border-industrial-700 flex items-center justify-center text-industrial-orange flex-shrink-0 shadow-lg">
@@ -386,7 +387,7 @@ export default function Home() {
                   <Award size={32} className="text-white" />
                 </div>
                 <div>
-                  <div className="text-sm text-gray-400 font-bold uppercase tracking-wider">Certified</div>
+                  <div className="text-sm text-gray-400 font-bold uppercase tracking-wider">{t('home.certified')}</div>
                   <div className="text-xl font-bold text-white">ISO 9001:2015</div>
                 </div>
               </div>
@@ -402,10 +403,10 @@ export default function Home() {
 
         <div className="container mx-auto px-4 relative z-10">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            <AnimatedCounter value="10+" title="Years Experience" />
-            <AnimatedCounter value="500+" title="Global Clients" />
-            <AnimatedCounter value="1,000+" title="Products Manufactured" />
-            <AnimatedCounter value="24/7" title="Dedicated Support" />
+            <AnimatedCounter value="10+" title={t('home.yearsExperience')} />
+            <AnimatedCounter value="500+" title={t('home.globalClients')} />
+            <AnimatedCounter value="1,000+" title={t('home.productsMfg')} />
+            <AnimatedCounter value="24/7" title={t('home.dedicatedSupport')} />
           </div>
         </div>
       </section>
@@ -414,15 +415,15 @@ export default function Home() {
       <section className="py-20 bg-industrial-800">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-4">What Our Clients Say</h2>
+            <h2 className="text-4xl font-bold mb-4">{t('home.clientsSay')}</h2>
             <div className="w-24 h-1 bg-industrial-orange mx-auto rounded-full mb-4"></div>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
             {[
-              { name: "Rahul S.", company: "TechBuild Infra", quote: "The flanges we ordered were perfectly machined. Very satisfied with the quick delivery and AI chatbot support." },
-              { name: "Michael T.", company: "HeavyMach Corp", quote: "Sri Krishna Engineering is our go-to for custom parts. Their team understands complex schematics effortlessly." },
-              { name: "Priya M.", company: "Global Piping Solutions", quote: "Lowest prices without compromising quality. The B2B ordering platform they've built is incredibly smooth." }
+              { name: "Rahul S.", company: "TechBuild Infra", quote: t('home.testimonial1') },
+              { name: "Michael T.", company: "HeavyMach Corp", quote: t('home.testimonial2') },
+              { name: "Priya M.", company: "Global Piping Solutions", quote: t('home.testimonial3') }
             ].map((review, i) => (
               <motion.div
                 key={i}
@@ -458,7 +459,7 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 mb-12">
             <div>
-              <h2 className="text-4xl font-bold mb-4">Industry Insights</h2>
+              <h2 className="text-4xl font-bold mb-4">{t('home.industryInsights')}</h2>
               <div className="w-24 h-1 bg-industrial-orange rounded-full mb-4"></div>
             </div>
           </div>
@@ -467,11 +468,11 @@ export default function Home() {
             <div className="group cursor-pointer bg-industrial-800 rounded-xl overflow-hidden border border-industrial-700 hover:border-industrial-orange/50 transition-colors">
               <div className="h-64 overflow-hidden relative">
                 <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&q=80" alt="Steel" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                <div className="absolute top-4 left-4 bg-industrial-orange text-white text-xs font-bold px-3 py-1 rounded uppercase">Market Trends</div>
+                <div className="absolute top-4 left-4 bg-industrial-orange text-white text-xs font-bold px-3 py-1 rounded uppercase">{t('home.marketTrends')}</div>
               </div>
               <div className="p-8">
-                <h3 className="text-2xl font-bold mb-3 text-white group-hover:text-industrial-orange transition-colors">Global Steel Price Trends & Impact on Manufacturing</h3>
-                <p className="text-gray-400 mb-6 line-clamp-2">An analysis of raw material costs in Q3 and how modern machining facilities are adapting to provide cost-effective solutions.</p>
+                <h3 className="text-2xl font-bold mb-3 text-white group-hover:text-industrial-orange transition-colors">{t('home.blogTitle1')}</h3>
+                <p className="text-gray-400 mb-6 line-clamp-2">{t('home.blogDesc1')}</p>
                 <div className="text-sm text-gray-500 font-medium">May 24, 2026 • 5 min read</div>
               </div>
             </div>
@@ -479,11 +480,11 @@ export default function Home() {
             <div className="group cursor-pointer bg-industrial-800 rounded-xl overflow-hidden border border-industrial-700 hover:border-industrial-orange/50 transition-colors">
               <div className="h-64 overflow-hidden relative">
                 <img src="https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80" alt="Flanges" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                <div className="absolute top-4 left-4 bg-industrial-orange text-white text-xs font-bold px-3 py-1 rounded uppercase">Technical Guide</div>
+                <div className="absolute top-4 left-4 bg-industrial-orange text-white text-xs font-bold px-3 py-1 rounded uppercase">{t('home.technicalGuide')}</div>
               </div>
               <div className="p-8">
-                <h3 className="text-2xl font-bold mb-3 text-white group-hover:text-industrial-orange transition-colors">How to Choose the Right Industrial Flange</h3>
-                <p className="text-gray-400 mb-6 line-clamp-2">Slip-on, weld neck, or blind? A comprehensive guide to understanding flange types and their specific high-pressure applications.</p>
+                <h3 className="text-2xl font-bold mb-3 text-white group-hover:text-industrial-orange transition-colors">{t('home.blogTitle2')}</h3>
+                <p className="text-gray-400 mb-6 line-clamp-2">{t('home.blogDesc2')}</p>
                 <div className="text-sm text-gray-500 font-medium">May 18, 2026 • 8 min read</div>
               </div>
             </div>
@@ -496,16 +497,16 @@ export default function Home() {
         <div className="absolute inset-0 bg-industrial-orange"></div>
         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1581092334651-ddf7d0a293dc?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80')] mix-blend-multiply opacity-20 bg-cover bg-center"></div>
         <div className="container mx-auto px-4 relative z-10 text-center">
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">Looking for Custom Manufacturing?</h2>
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">{t('home.lookingCustomMfg')}</h2>
           <p className="text-xl text-white/90 mb-10 max-w-2xl mx-auto">
-            Send us your CAD drawings or technical requirements. Our engineering team provides quotes within 24 hours.
+            {t('home.lookingCustomMfgDesc')}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link to="/contact" className="bg-industrial-900 text-white hover:bg-industrial-800 text-lg font-bold py-4 px-10 rounded shadow-2xl transition-all hover:-translate-y-1">
-              Request a Quote
+              {t('home.requestQuote')}
             </Link>
             <a href={`https://wa.me/${import.meta.env.VITE_WHATSAPP_NUMBER || '6369174670'}`} target="_blank" rel="noopener noreferrer" className="bg-white text-industrial-900 hover:bg-gray-100 text-lg font-bold py-4 px-10 rounded shadow-2xl transition-all hover:-translate-y-1 flex items-center justify-center gap-2">
-              WhatsApp Us
+              {t('home.whatsAppUs')}
             </a>
           </div>
         </div>

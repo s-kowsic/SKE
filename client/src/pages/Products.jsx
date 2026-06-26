@@ -28,7 +28,12 @@ export default function Products() {
   const [sortBy, setSortBy] = useState('newest');
 
   // Categories available (could be derived from data)
-  const categoriesList = ['Flanges', 'Connectors', 'Machined Parts', 'Valves'];
+  const categoriesMap = [
+    { key: 'Flanges', label: t('filter.flanges') },
+    { key: 'Connectors', label: t('filter.connectors') },
+    { key: 'Machined Parts', label: t('filter.machinedParts') },
+    { key: 'Valves', label: t('filter.valves') }
+  ];
 
   useEffect(() => {
     fetchProducts();
@@ -178,9 +183,9 @@ export default function Products() {
               className="flex items-center gap-2 text-white font-bold"
             >
               <Filter size={20} />
-              Filters
+              {t('filter.title')}
             </button>
-            <div className="text-sm text-gray-400">{filteredProducts.length} Results</div>
+            <div className="text-sm text-gray-400">{filteredProducts.length} {t('filter.results')}</div>
           </div>
 
           {/* DESKTOP SIDEBAR */}
@@ -188,25 +193,25 @@ export default function Products() {
             <div className="sticky top-24 bg-industrial-800 p-6 rounded-2xl border border-industrial-700 shadow-xl">
               <div className="flex items-center gap-2 mb-6 pb-4 border-b border-industrial-700">
                 <SlidersHorizontal size={20} className="text-industrial-orange" />
-                <h2 className="text-lg font-bold text-white">Filters</h2>
+                <h2 className="text-lg font-bold text-white">{t('filter.title')}</h2>
               </div>
               
               {/* Category Filter */}
               <div className="mb-8">
-                <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-4">Category</h3>
+                <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-4">{t('filter.category')}</h3>
                 <div className="space-y-3">
-                  {categoriesList.map(cat => (
-                    <label key={cat} className="flex items-center gap-3 cursor-pointer group">
+                  {categoriesMap.map(({ key, label }) => (
+                    <label key={key} className="flex items-center gap-3 cursor-pointer group">
                       <div className="relative flex items-center justify-center w-5 h-5 rounded border border-industrial-600 bg-industrial-900 group-hover:border-industrial-orange transition-colors">
                         <input 
                           type="checkbox" 
                           className="opacity-0 absolute inset-0 cursor-pointer"
-                          checked={filters.categories.includes(cat)}
-                          onChange={() => handleCategoryChange(cat)}
+                          checked={filters.categories.includes(key)}
+                          onChange={() => handleCategoryChange(key)}
                         />
-                        {filters.categories.includes(cat) && <div className="w-3 h-3 bg-industrial-orange rounded-sm"></div>}
+                        {filters.categories.includes(key) && <div className="w-3 h-3 bg-industrial-orange rounded-sm"></div>}
                       </div>
-                      <span className="text-gray-300 group-hover:text-white transition-colors">{cat}</span>
+                      <span className="text-gray-300 group-hover:text-white transition-colors">{label}</span>
                     </label>
                   ))}
                 </div>
@@ -214,7 +219,7 @@ export default function Products() {
 
               {/* Price Range */}
               <div className="mb-8">
-                <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-4">Max Price: ₹{filters.priceRange[1]}</h3>
+                <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-4">{t('filter.maxPrice')}: ₹{filters.priceRange[1]}</h3>
                 <input 
                   type="range" 
                   min="0" max="5000" step="50"
@@ -240,7 +245,7 @@ export default function Products() {
                     />
                     {filters.inStockOnly && <div className="w-3 h-3 bg-industrial-orange rounded-sm"></div>}
                   </div>
-                  <span className="text-gray-300 group-hover:text-white transition-colors">In Stock Only</span>
+                  <span className="text-gray-300 group-hover:text-white transition-colors">{t('filter.inStockOnly')}</span>
                 </label>
               </div>
 
@@ -290,7 +295,7 @@ export default function Products() {
                   <Search size={32} />
                 </div>
                 <h3 className="text-2xl font-bold text-white mb-2">{t('products.noResults')}</h3>
-                <p className="text-gray-400 mb-6 max-w-md mx-auto">We couldn't find any products matching your current filters and search query.</p>
+                <p className="text-gray-400 mb-6 max-w-md mx-auto">{t('filter.noMatchDesc')}</p>
                 <button 
                   onClick={() => {
                     setQuery('');
@@ -298,7 +303,7 @@ export default function Products() {
                   }} 
                   className="btn-primary py-2 px-6"
                 >
-                  Clear All Filters
+                  {t('filter.clearAll')}
                 </button>
               </div>
             )}
@@ -322,7 +327,7 @@ export default function Products() {
             >
               <div className="p-4 border-b border-industrial-700 flex justify-between items-center bg-industrial-800">
                 <h2 className="text-lg font-bold text-white flex items-center gap-2">
-                  <Filter size={20} /> Filters
+                  <Filter size={20} /> {t('filter.title')}
                 </h2>
                 <button onClick={() => setShowMobileFilters(false)} className="text-gray-400 hover:text-white p-2">
                   <X size={24} />
@@ -332,35 +337,35 @@ export default function Products() {
               <div className="p-6 overflow-y-auto flex-1">
                 {/* Sort (Mobile) */}
                 <div className="mb-8">
-                  <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-4">Sort By</h3>
+                  <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-4">{t('filter.sortBy')}</h3>
                   <select 
                     className="w-full bg-industrial-800 border border-industrial-700 text-white py-3 px-4 rounded-lg focus:outline-none focus:border-industrial-orange"
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value)}
                   >
-                    <option value="newest">Newest Arrivals</option>
-                    <option value="popular">Most Popular</option>
-                    <option value="price_asc">Price: Low to High</option>
-                    <option value="price_desc">Price: High to Low</option>
+                    <option value="newest">{t('filter.newestArrivals')}</option>
+                    <option value="popular">{t('filter.mostPopular')}</option>
+                    <option value="price_asc">{t('products.sort.priceLow')}</option>
+                    <option value="price_desc">{t('products.sort.priceHigh')}</option>
                   </select>
                 </div>
 
                 {/* Categories */}
                 <div className="mb-8">
-                  <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-4">Category</h3>
+                  <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-4">{t('filter.category')}</h3>
                   <div className="space-y-4">
-                    {categoriesList.map(cat => (
-                      <label key={cat} className="flex items-center gap-3 cursor-pointer">
+                    {categoriesMap.map(({ key, label }) => (
+                      <label key={key} className="flex items-center gap-3 cursor-pointer">
                         <div className="relative flex items-center justify-center w-6 h-6 rounded border border-industrial-600 bg-industrial-800">
                           <input 
                             type="checkbox" 
                             className="opacity-0 absolute inset-0 cursor-pointer"
-                            checked={filters.categories.includes(cat)}
-                            onChange={() => handleCategoryChange(cat)}
+                            checked={filters.categories.includes(key)}
+                            onChange={() => handleCategoryChange(key)}
                           />
-                          {filters.categories.includes(cat) && <div className="w-3.5 h-3.5 bg-industrial-orange rounded-sm"></div>}
+                          {filters.categories.includes(key) && <div className="w-3.5 h-3.5 bg-industrial-orange rounded-sm"></div>}
                         </div>
-                        <span className="text-gray-300 text-lg">{cat}</span>
+                        <span className="text-gray-300 text-lg">{label}</span>
                       </label>
                     ))}
                   </div>
@@ -368,7 +373,7 @@ export default function Products() {
 
                 {/* Mobile Price */}
                 <div className="mb-8">
-                  <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-4">Max Price: ₹{filters.priceRange[1]}</h3>
+                  <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-4">{t('filter.maxPrice')}: ₹{filters.priceRange[1]}</h3>
                   <input 
                     type="range" min="0" max="5000" step="50"
                     value={filters.priceRange[1]}
@@ -389,7 +394,7 @@ export default function Products() {
                       />
                       {filters.inStockOnly && <div className="w-3.5 h-3.5 bg-industrial-orange rounded-sm"></div>}
                     </div>
-                    <span className="text-gray-300 text-lg">In Stock Only</span>
+                    <span className="text-gray-300 text-lg">{t('filter.inStockOnly')}</span>
                   </label>
                 </div>
               </div>
@@ -399,7 +404,7 @@ export default function Products() {
                   onClick={() => setShowMobileFilters(false)}
                   className="w-full btn-primary py-4 text-lg font-bold"
                 >
-                  View {filteredProducts.length} Results
+                  {t('filter.viewResults')} ({filteredProducts.length})
                 </button>
               </div>
             </motion.div>

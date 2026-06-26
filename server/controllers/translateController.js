@@ -1,12 +1,35 @@
-const Groq = require('groq-sdk');
+const axios = require('axios');
 
-const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+const SARVAM_API_KEY = process.env.SARVAM;
+const SARVAM_URL = 'https://api.sarvam.ai/translate';
 
 // In-memory translation cache to avoid repeated API calls
 const translationCache = new Map();
 
 function getCacheKey(text, lang) {
   return `${lang}:${text.trim().toLowerCase()}`;
+}
+
+async function sarvamTranslate(text, sourceLang, targetLang) {
+  const response = await axios.post(
+    SARVAM_URL,
+    {
+      input: text,
+      source_language_code: sourceLang === 'en' ? 'en-IN' : 'ta-IN',
+      target_language_code: targetLang === 'en' ? 'en-IN' : 'ta-IN',
+      speaker_gender: 'Male',
+      mode: 'formal',
+      model: 'mayura:v1',
+      enable_preprocessing: true,
+    },
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        'api-subscription-key': SARVAM_API_KEY,
+      },
+    }
+  );
+  return response.data.translated_text || text;
 }
 
 const translateText = async (req, res) => {
@@ -26,24 +49,13 @@ const translateText = async (req, res) => {
   }
 
   try {
-    const langName = targetLang === 'ta' ? 'Tamil' : 'English';
-    const prompt = `Translate the following text into ${langName} accurately. This is for an industrial engineering company that sells flanges, connectors, machined parts, valves, and tools. Preserve technical/industrial terminology accurately. Return ONLY the translated text, nothing else.\n\nText: "${text}"`;
+    const sourceLang = targetLang === 'ta' ? 'en' : 'ta';
+    const translated = await sarvamTranslate(text, sourceLang, targetLang);
 
-    const chatCompletion = await groq.chat.completions.create({
-      messages: [{ role: 'user', content: prompt }],
-      model: 'llama-3.1-8b-instant',
-      temperature: 0.1,
-    });
-
-    const translated = chatCompletion.choices[0]?.message?.content?.trim() || text;
-    
-    // Remove surrounding quotes if present
-    const cleaned = translated.replace(/^["']|["']$/g, '');
-    
-    translationCache.set(cacheKey, cleaned);
-    res.json({ translated: cleaned, cached: false });
+    translationCache.set(cacheKey, translated);
+    res.json({ translated, cached: false });
   } catch (error) {
-    console.error('Translation Error:', error);
+    console.error('Sarvam Translation Error:', error?.response?.data || error.message);
     // Fallback: return original text
     res.json({ translated: text, cached: false, fallback: true });
   }
@@ -81,40 +93,23 @@ const translateBatch = async (req, res) => {
       return res.json({ translations: results, cached: true });
     }
 
-    // Batch translate uncached texts
-    const langName = targetLang === 'ta' ? 'Tamil' : 'English';
-    const numberedTexts = uncachedTexts.map((t, i) => `${i + 1}. "${t}"`).join('\n');
-    const prompt = `Translate each of the following texts into ${langName} accurately. This is for an industrial engineering company. Preserve technical/industrial terminology. Return ONLY a JSON array of translated strings in the same order. No markdown formatting.\n\n${numberedTexts}`;
-
-    const chatCompletion = await groq.chat.completions.create({
-      messages: [{ role: 'user', content: prompt }],
-      model: 'llama-3.1-8b-instant',
-      temperature: 0.1,
-    });
-
-    const responseContent = chatCompletion.choices[0]?.message?.content?.trim() || '[]';
-    
-    let translations = [];
-    try {
-      const cleanJson = responseContent.replace(/```json/g, '').replace(/```/g, '').trim();
-      translations = JSON.parse(cleanJson);
-    } catch (e) {
-      console.error('Failed to parse batch translation:', responseContent);
-      // Fallback: return original texts
-      translations = uncachedTexts;
-    }
+    // Translate uncached texts in parallel using Sarvam API
+    const sourceLang = targetLang === 'ta' ? 'en' : 'ta';
+    const translationPromises = uncachedTexts.map(text =>
+      sarvamTranslate(text, sourceLang, targetLang).catch(() => text)
+    );
+    const translations = await Promise.all(translationPromises);
 
     // Fill in results and cache
     for (let i = 0; i < uncachedIndices.length; i++) {
       const translated = translations[i] || uncachedTexts[i];
-      const cleaned = typeof translated === 'string' ? translated.replace(/^["']|["']$/g, '') : uncachedTexts[i];
-      results[uncachedIndices[i]] = cleaned;
-      translationCache.set(getCacheKey(uncachedTexts[i], targetLang), cleaned);
+      results[uncachedIndices[i]] = translated;
+      translationCache.set(getCacheKey(uncachedTexts[i], targetLang), translated);
     }
 
     res.json({ translations: results, cached: false });
   } catch (error) {
-    console.error('Batch Translation Error:', error);
+    console.error('Batch Translation Error:', error?.response?.data || error.message);
     // Fallback: return original texts
     res.json({ translations: texts, cached: false, fallback: true });
   }

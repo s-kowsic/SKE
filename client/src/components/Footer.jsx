@@ -9,7 +9,7 @@ export default function Footer() {
     <footer className="bg-industrial-900 pt-16 pb-8 border-t border-industrial-700 relative overflow-hidden">
       {/* Decorative gradient orb */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-industrial-orange/5 blur-[120px] rounded-full pointer-events-none"></div>
-      
+
       <div className="container mx-auto px-4 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
           {/* Company Info */}
@@ -66,15 +66,15 @@ export default function Footer() {
             <ul className="space-y-4">
               <li className="flex items-start">
                 <MapPin size={20} className="text-industrial-orange mr-3 mt-1 flex-shrink-0" />
-                <span className="text-gray-400">123 Industrial Park, Block 4<br />Bangalore, KA 560001, India</span>
+                <span className="text-gray-400">Sri Krishna Engineering<br />Kuniyamuthur, Coimbatore<br />Tamil Nadu, India</span>
               </li>
               <li className="flex items-center">
                 <Phone size={20} className="text-industrial-orange mr-3 flex-shrink-0" />
-                <span className="text-gray-400">+91 98765 43210</span>
+                <span className="text-gray-400">+91 6380657464</span>
               </li>
               <li className="flex items-center">
                 <Mail size={20} className="text-industrial-orange mr-3 flex-shrink-0" />
-                <span className="text-gray-400">sales@srikrishnaeng.com</span>
+                <span className="text-gray-400">adminkrishna@gmail.com</span>
               </li>
             </ul>
           </div>
@@ -92,7 +92,7 @@ export default function Footer() {
           </div>
         </div>
       </div>
-      
+
     </footer>
   );
 }

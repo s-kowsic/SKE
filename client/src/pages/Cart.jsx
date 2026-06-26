@@ -2,10 +2,11 @@ import { useState } from 'react';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
-import { Trash2, CheckCircle, ShoppingBag, ArrowRight, Plus, Minus } from 'lucide-react';
+import { Trash2, CheckCircle, ShoppingBag, ArrowRight, Plus, Minus, Shield, CreditCard } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import api from '../services/api';
 import toast from 'react-hot-toast';
+import { getImageUrl } from '../services/imageUrl';
 
 export default function Cart() {
   const { cart, removeFromCart, updateQuantity, cartTotal, clearCart } = useCart();
@@ -19,18 +20,73 @@ export default function Cart() {
       toast.error("Please login to checkout.");
       return;
     }
+    if (cart.length === 0) return;
+
     try {
       setIsProcessing(true);
-      const orderData = {
-        products: cart.map(item => ({ productId: item._id, quantity: item.quantity, priceAtPurchase: item.price })),
-        totalPrice: cartTotal
+
+      // Step 1: Create Razorpay order on the server
+      const { data } = await api.post('/payment/create-order', {
+        amount: cartTotal,
+        cartItems: cart.map(item => ({ id: item._id, quantity: item.quantity })),
+      });
+
+      // Step 2: Open Razorpay checkout popup
+      const options = {
+        key: data.keyId,
+        amount: data.amount,
+        currency: data.currency,
+        name: 'Sri Krishna Engineering',
+        description: `Order - ${cart.length} item(s)`,
+        order_id: data.orderId,
+        handler: async (response) => {
+          // Step 3: Verify payment on server
+          try {
+            const verifyData = {
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+              products: cart.map(item => ({
+                productId: item._id,
+                quantity: item.quantity,
+                priceAtPurchase: item.price,
+              })),
+              totalPrice: cartTotal,
+            };
+            await api.post('/payment/verify', verifyData);
+            setIsSuccess(true);
+            clearCart();
+            toast.success('Payment successful! Order placed.', { icon: '✅' });
+          } catch (err) {
+            console.error('Payment verification failed:', err);
+            toast.error('Payment verification failed. Contact support.');
+          }
+        },
+        prefill: {
+          name: user.name || '',
+          email: user.email || '',
+        },
+        theme: {
+          color: '#F97316', // industrial-orange
+        },
+        modal: {
+          ondismiss: () => {
+            setIsProcessing(false);
+            toast('Payment cancelled.', { icon: '⚠️' });
+          },
+        },
       };
-      await api.post('/orders', orderData);
-      setIsSuccess(true);
-      clearCart();
+
+      const rzp = new window.Razorpay(options);
+      rzp.on('payment.failed', (response) => {
+        console.error('Payment failed:', response.error);
+        toast.error(`Payment failed: ${response.error.description}`);
+        setIsProcessing(false);
+      });
+      rzp.open();
     } catch (error) {
-      console.error(error);
-      toast.error('Checkout failed.');
+      console.error('Checkout error:', error);
+      toast.error('Failed to initiate payment. Please try again.');
     } finally {
       setIsProcessing(false);
     }
@@ -42,7 +98,7 @@ export default function Cart() {
         <CheckCircle size={80} className="text-green-500 mb-6" />
         <h2 className="text-4xl font-bold mb-4 text-white">Order Confirmed!</h2>
         <p className="text-gray-400 text-lg mb-8 max-w-md">
-          Thank you for your purchase. Your order has been placed successfully and is currently being processed.
+          Thank you for your purchase. Your payment has been verified and your order is now being processed.
         </p>
         <Link to={`/u/${user.userid}/orders`} className="btn-primary inline-flex items-center gap-2">
           View Orders <ArrowRight size={20} />
@@ -75,7 +131,7 @@ export default function Cart() {
               <div key={item._id} className="bg-industrial-800 border border-industrial-700 rounded-xl p-4 flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 shadow-sm hover:border-industrial-600 transition-colors">
                 <div className="w-24 h-24 bg-industrial-900 rounded-lg overflow-hidden flex-shrink-0">
                   {item.imageUrl ? (
-                    <img src={item.imageUrl} alt={item.name} className="w-full h-full object-cover" />
+                    <img src={getImageUrl(item.imageUrl)} alt={item.name} className="w-full h-full object-cover" />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center text-gray-600 text-sm">No Image</div>
                   )}
@@ -148,12 +204,17 @@ export default function Cart() {
                 disabled={isProcessing || cart.length === 0}
                 className="w-full btn-primary py-4 text-lg font-bold flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {isProcessing ? t('common.loading') : t('cart.checkout')}
+                {isProcessing ? (
+                  <>{t('common.loading')}</>
+                ) : (
+                  <><CreditCard size={20} /> Pay ₹{cartTotal.toFixed(2)}</>
+                )}
               </button>
               
-              <p className="text-xs text-gray-500 mt-4 text-center">
-                Secure checkout powered by Sri Krishna Engineering.
-              </p>
+              <div className="flex items-center justify-center gap-2 mt-4 text-xs text-gray-500">
+                <Shield size={14} />
+                <span>Secure checkout powered by Razorpay</span>
+              </div>
             </div>
           </div>
         </div>

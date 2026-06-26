@@ -2,10 +2,12 @@ import { useState, useEffect } from 'react';
 import api from '../services/api';
 import { Download } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function AdminOrders() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { t } = useLanguage();
 
   useEffect(() => {
     fetchData();
@@ -62,15 +64,15 @@ export default function AdminOrders() {
     document.body.removeChild(link);
   };
 
-  if (loading) return <div className="p-8 text-center text-xl text-gray-400">Loading Orders...</div>;
+  if (loading) return <div className="p-8 text-center text-xl text-gray-400">{t('admin.loadingOrders')}</div>;
 
   return (
     <div className="container mx-auto px-4 py-4 sm:py-8">
       <div className="w-full">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-          <h2 className="text-2xl sm:text-3xl font-bold">Order Management</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold">{t('admin.orderMgmt')}</h2>
           <button onClick={downloadCSV} className="flex items-center gap-2 btn-secondary">
-            <Download size={18} /> Download CSV Report
+            <Download size={18} /> {t('admin.downloadCSV')}
           </button>
         </div>
         
@@ -78,11 +80,11 @@ export default function AdminOrders() {
           <table className="w-full text-left text-sm">
             <thead className="bg-industrial-900">
               <tr>
-                <th className="p-4 border-b border-industrial-700">Order ID</th>
-                <th className="p-4 border-b border-industrial-700">User</th>
-                <th className="p-4 border-b border-industrial-700">Total</th>
-                <th className="p-4 border-b border-industrial-700">Status</th>
-                <th className="p-4 border-b border-industrial-700">Action</th>
+                <th className="p-4 border-b border-industrial-700">{t('admin.orderId')}</th>
+                <th className="p-4 border-b border-industrial-700">{t('admin.user')}</th>
+                <th className="p-4 border-b border-industrial-700">{t('admin.total')}</th>
+                <th className="p-4 border-b border-industrial-700">{t('admin.status')}</th>
+                <th className="p-4 border-b border-industrial-700">{t('admin.action')}</th>
               </tr>
             </thead>
             <tbody>
@@ -106,15 +108,15 @@ export default function AdminOrders() {
                       value={order.status}
                       onChange={(e) => updateOrderStatus(order._id, e.target.value)}
                     >
-                      <option value="Pending">Pending</option>
-                      <option value="Processing">Processing</option>
-                      <option value="Completed">Completed</option>
+                      <option value="Pending">{t('admin.pending')}</option>
+                      <option value="Processing">{t('admin.processing')}</option>
+                      <option value="Completed">{t('admin.completed')}</option>
                     </select>
                   </td>
                 </tr>
               ))}
               {orders.length === 0 && (
-                <tr><td colSpan="5" className="p-8 text-center text-gray-500">No orders found.</td></tr>
+                <tr><td colSpan="5" className="p-8 text-center text-gray-500">{t('admin.noOrders')}</td></tr>
               )}
             </tbody>
           </table>

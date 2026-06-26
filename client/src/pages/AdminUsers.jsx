@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import api from '../services/api';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function AdminUsers() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { t } = useLanguage();
 
   useEffect(() => {
     fetchData();
@@ -20,24 +22,24 @@ export default function AdminUsers() {
     }
   };
 
-  if (loading) return <div className="p-8 text-center text-xl text-gray-400">Loading Users...</div>;
+  if (loading) return <div className="p-8 text-center text-xl text-gray-400">{t('admin.loadingUsers')}</div>;
 
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="w-full">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-3xl font-bold">User Management</h2>
+          <h2 className="text-3xl font-bold">{t('admin.userMgmt')}</h2>
         </div>
         
         <div className="bg-industrial-800 rounded-lg overflow-hidden border border-industrial-700">
           <table className="w-full text-left text-sm">
             <thead className="bg-industrial-900">
               <tr>
-                <th className="p-4 border-b border-industrial-700">ID</th>
-                <th className="p-4 border-b border-industrial-700">Name</th>
-                <th className="p-4 border-b border-industrial-700">Email</th>
-                <th className="p-4 border-b border-industrial-700">Role</th>
-                <th className="p-4 border-b border-industrial-700">Joined</th>
+                <th className="p-4 border-b border-industrial-700">{t('admin.id')}</th>
+                <th className="p-4 border-b border-industrial-700">{t('admin.name')}</th>
+                <th className="p-4 border-b border-industrial-700">{t('admin.email')}</th>
+                <th className="p-4 border-b border-industrial-700">{t('admin.role')}</th>
+                <th className="p-4 border-b border-industrial-700">{t('admin.joined')}</th>
               </tr>
             </thead>
             <tbody>
@@ -57,7 +59,7 @@ export default function AdminUsers() {
                 </tr>
               ))}
               {users.length === 0 && (
-                <tr><td colSpan="5" className="p-8 text-center text-gray-500">No users found.</td></tr>
+                <tr><td colSpan="5" className="p-8 text-center text-gray-500">{t('admin.noUsers')}</td></tr>
               )}
             </tbody>
           </table>

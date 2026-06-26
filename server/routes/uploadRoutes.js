@@ -35,9 +35,8 @@ const upload = multer({
 
 router.post('/', protect, admin, upload.single('image'), (req, res) => {
   if (req.file) {
-    // Generate full URL
-    const fullUrl = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
-    res.json({ image: fullUrl });
+    // Return relative path - the client will prepend the server base URL
+    res.json({ image: `/uploads/${req.file.filename}` });
   } else {
     res.status(400).json({ message: 'No image uploaded' });
   }

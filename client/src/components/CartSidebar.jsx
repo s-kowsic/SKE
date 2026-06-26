@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useCart } from '../context/CartContext';
-import { X, Trash2, CheckCircle, Plus, Minus } from 'lucide-react';
+import { X, Trash2, CheckCircle, Plus, Minus, CreditCard, Shield } from 'lucide-react';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
@@ -9,27 +9,85 @@ export default function CartSidebar({ isOpen, onClose }) {
   const { cart, removeFromCart, updateQuantity, cartTotal, clearCart } = useCart();
   const { user } = useAuth();
   const [isSuccess, setIsSuccess] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   const handleCheckout = async () => {
     if (!user) {
       toast.error("Please login to checkout.");
       return;
     }
+    if (cart.length === 0) return;
+
     try {
-      const orderData = {
-        products: cart.map(item => ({ productId: item._id, quantity: item.quantity, priceAtPurchase: item.price })),
-        totalPrice: cartTotal
+      setIsProcessing(true);
+
+      // Step 1: Create Razorpay order on the server
+      const { data } = await api.post('/payment/create-order', {
+        amount: cartTotal,
+        cartItems: cart.map(item => ({ id: item._id, quantity: item.quantity })),
+      });
+
+      // Step 2: Open Razorpay checkout popup
+      const options = {
+        key: data.keyId,
+        amount: data.amount,
+        currency: data.currency,
+        name: 'Sri Krishna Engineering',
+        description: `Order - ${cart.length} item(s)`,
+        order_id: data.orderId,
+        handler: async (response) => {
+          try {
+            const verifyData = {
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+              products: cart.map(item => ({
+                productId: item._id,
+                quantity: item.quantity,
+                priceAtPurchase: item.price,
+              })),
+              totalPrice: cartTotal,
+            };
+            await api.post('/payment/verify', verifyData);
+            setIsSuccess(true);
+            clearCart();
+            toast.success('Payment successful!', { icon: '✅' });
+            setTimeout(() => {
+              setIsSuccess(false);
+              onClose();
+            }, 3000);
+          } catch (err) {
+            console.error('Payment verification failed:', err);
+            toast.error('Payment verification failed. Contact support.');
+          }
+        },
+        prefill: {
+          name: user.name || '',
+          email: user.email || '',
+        },
+        theme: {
+          color: '#F97316',
+        },
+        modal: {
+          ondismiss: () => {
+            setIsProcessing(false);
+            toast('Payment cancelled.', { icon: '⚠️' });
+          },
+        },
       };
-      await api.post('/orders', orderData);
-      setIsSuccess(true);
-      clearCart();
-      setTimeout(() => {
-        setIsSuccess(false);
-        onClose();
-      }, 3000);
+
+      const rzp = new window.Razorpay(options);
+      rzp.on('payment.failed', (response) => {
+        console.error('Payment failed:', response.error);
+        toast.error(`Payment failed: ${response.error.description}`);
+        setIsProcessing(false);
+      });
+      rzp.open();
     } catch (error) {
-      console.error(error);
-      toast.error('Checkout failed.');
+      console.error('Checkout error:', error);
+      toast.error('Failed to initiate payment. Please try again.');
+    } finally {
+      setIsProcessing(false);
     }
   };
 
@@ -46,11 +104,11 @@ export default function CartSidebar({ isOpen, onClose }) {
         <div className="h-full flex flex-col items-center justify-center p-8 text-center">
           <CheckCircle size={64} className="text-green-500 mb-4" />
           <h3 className="text-2xl font-bold mb-2">Order Confirmed!</h3>
-          <p className="text-gray-400">Thank you for your purchase. We are processing your order.</p>
+          <p className="text-gray-400">Payment verified. Your order is being processed.</p>
         </div>
       ) : (
         <>
-          <div className="p-4 overflow-y-auto h-[calc(100vh-160px)]">
+          <div className="p-4 overflow-y-auto h-[calc(100vh-180px)]">
             {cart.length === 0 ? (
               <p className="text-gray-500 text-center mt-10">Cart is empty.</p>
             ) : (
@@ -85,17 +143,25 @@ export default function CartSidebar({ isOpen, onClose }) {
             )}
           </div>
           <div className="absolute bottom-0 w-full p-4 bg-industrial-800 border-t border-industrial-700">
-            <div className="flex justify-between mb-4 font-bold text-lg">
+            <div className="flex justify-between mb-3 font-bold text-lg">
               <span>Total:</span>
-              <span>₹{cartTotal.toFixed(2)}</span>
+              <span className="text-industrial-orange">₹{cartTotal.toFixed(2)}</span>
             </div>
             <button 
               onClick={handleCheckout}
-              disabled={cart.length === 0}
-              className="w-full btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={cart.length === 0 || isProcessing}
+              className="w-full btn-primary flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Checkout
+              {isProcessing ? (
+                'Processing...'
+              ) : (
+                <><CreditCard size={18} /> Pay ₹{cartTotal.toFixed(2)}</>
+              )}
             </button>
+            <div className="flex items-center justify-center gap-1.5 mt-2 text-[10px] text-gray-500">
+              <Shield size={10} />
+              <span>Secured by Razorpay</span>
+            </div>
           </div>
         </>
       )}

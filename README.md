@@ -1,3 +1,17 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # Sri Krishna Engineering (SKE) - Full-Stack E-Commerce & Management Portal
 
 Welcome to the **Sri Krishna Engineering (SKE)** repository. This project is a comprehensive, full-stack MERN (MongoDB, Express, React, Node.js) application designed to serve as both an e-commerce storefront for customers and a powerful management portal for administrators. 
